@@ -94,7 +94,12 @@ class App extends Component {
       color: `rgb(${getRandomInt(255)}, ${getRandomInt(255)}, ${getRandomInt(255)})`,
     });
     this.getPastMessages();
-    this.getMessages();
+
+    try {
+      this.getMessages();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   handleMessageChange = (e) => {
