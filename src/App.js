@@ -57,6 +57,15 @@ class App extends Component {
             console.log("Reconnecting failed: ", err);
           }
         });
+
+        res.on('error', () => {
+          console.log("Connection error");
+          try {
+            this.getMessages();
+          } catch (err) {
+            console.log("Reconnecting failed: ", err);
+          }
+        });
       })
     } catch (err) {
       console.log("error in request: ", err);
