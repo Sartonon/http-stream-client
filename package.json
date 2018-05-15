@@ -2,6 +2,7 @@
   "name": "http-stream-client",
   "version": "0.1.0",
   "private": true,
+  "homepage" : "http://httpstream.sartonon.fi/",
   "dependencies": {
     "axios": "^0.18.0",
     "react": "^16.3.2",
