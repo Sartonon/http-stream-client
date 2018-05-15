@@ -51,11 +51,16 @@ class App extends Component {
       
         res.on('end', () => {
           console.log("End connection");
-          this.getMessages();
+          try {
+            this.getMessages();
+          } catch (err) {
+            console.log("Reconnecting failed: ", err);
+          }
         });
       })
     } catch (err) {
-      console.log("error: ", err);
+      console.log("error in request: ", err);
+      this.getMessages();
     }
   };
 
