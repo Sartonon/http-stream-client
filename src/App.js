@@ -30,13 +30,13 @@ class App extends Component {
   }
 
   getPastMessages = async () => {
-    const { data } = await axios.get("http://localhost:9001/pastMessages");
+    const { data } = await axios.get("http://httpstream.sartonon.fi/api/pastMessages");
     this.setState({ messages: data });
   };
 
   getMessages = async () => {
     try {
-      this.messagesRequest = http.get('http://localhost:9001/messages', res => {
+      this.messagesRequest = http.get('http://httpstream.sartonon.fi/api/messages', res => {
         console.log("Connection Opened");
         res.on('data', buf => {
           if (buf.toString() !== "Connection open") {
@@ -61,7 +61,7 @@ class App extends Component {
 
   sendMessage = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:9001/messages", {
+    axios.post("http://httpstream.sartonon.fi/api/messages", {
       name: this.state.username,
       message: this.state.message,
       color: this.state.color,
