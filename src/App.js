@@ -27,6 +27,10 @@ class App extends Component {
         objDiv.scrollTop = objDiv.scrollHeight;
       }
     }
+
+    if (this.state.messages.length > 10) {
+      this.setState({ messages: [] });
+    }
   }
 
   getPastMessages = async () => {
@@ -102,7 +106,7 @@ class App extends Component {
       usernameConfirmed: true,
       color: `rgb(${getRandomInt(255)}, ${getRandomInt(255)}, ${getRandomInt(255)})`,
     });
-    this.getPastMessages();
+    // this.getPastMessages();
 
     try {
       this.getMessages();
@@ -113,6 +117,17 @@ class App extends Component {
 
   handleMessageChange = (e) => {
     this.setState({ message: e.target.value });
+  };
+
+  startSending = () => {
+    if (this.messageInterval) clearInterval(this.messageInterval);
+    this.messageInterval = setInterval(() => {
+      axios.post("http://httpstream.sartonon.fi/api/messages", {
+        name: 'Santeri',
+        message: 'Moikka!',
+        color: 'green',
+      });
+    }, this.state.interval || 1000);
   };
 
   renderMessages = () => {
@@ -135,6 +150,8 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Chat</h1>
+          <button onClick={this.startSending}>Laheta</button>
+          <input onChange={e => this.setState({ interval: e.target.value })} />
         </header>
         {!usernameConfirmed ?
           <div className="Login-div">
