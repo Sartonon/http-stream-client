@@ -12,6 +12,7 @@ class App extends Component {
     messages: [],
     username: "",
     usernameConfirmed: false,
+    sentMessages: 0,
     message: "",
     color: 0
   };
@@ -188,7 +189,7 @@ class App extends Component {
   };
 
   render() {
-    const { usernameConfirmed } = this.state;
+    const { usernameConfirmed, sentMessages } = this.state;
 
     return (
       <div className="App">
@@ -196,6 +197,7 @@ class App extends Component {
           <h1 className="App-title">Chat</h1>
           <button onClick={this.startSending}>Laheta</button>
           <input onChange={e => this.setState({ interval: e.target.value })} />
+          <div style={{ float: "right" }}>{sentMessages}</div>
         </header>
         {!usernameConfirmed ? (
           <div className="Login-div">
