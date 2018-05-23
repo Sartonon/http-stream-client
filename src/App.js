@@ -44,7 +44,7 @@ class App extends Component {
 
   getPastMessages = async () => {
     const { data } = await axios.get(
-      "http://httpstream.sartonon.fi/api/pastMessages"
+      "http://localhost:3080/httpstream/pastMessages"
     );
     this.setState({ messages: data });
   };
@@ -65,7 +65,7 @@ class App extends Component {
           this.setState(prevState => ({
             sentMessages: prevState.sentMessages + 1
           }));
-          axios.post("http://httpstream.sartonon.fi/api/messages", {
+          axios.post("http://localhost:3080/httpstream/messages", {
             name,
             message,
             color: "green"
@@ -78,7 +78,7 @@ class App extends Component {
   getMessages = async () => {
     try {
       this.messagesRequest = http.get(
-        "http://httpstream.sartonon.fi/api/messages",
+        "http://localhost:3080/httpstream/messages",
         res => {
           console.log("Connection Opened");
           res.on("data", buf => {
@@ -120,7 +120,7 @@ class App extends Component {
 
   sendMessage = e => {
     e.preventDefault();
-    axios.post("http://httpstream.sartonon.fi/api/messages", {
+    axios.post("http://localhost:3080/httpstream/messages", {
       name: this.state.username,
       message: this.state.message,
       color: this.state.color
@@ -159,7 +159,7 @@ class App extends Component {
   startSending = () => {
     if (this.messageInterval) clearInterval(this.messageInterval);
     this.messageInterval = setInterval(() => {
-      axios.post("http://httpstream.sartonon.fi/api/messages", {
+      axios.post("http://localhost:3080/httpstream/messages", {
         name: "Santeri",
         message: "Moikka!",
         color: "green"
